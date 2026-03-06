@@ -1,0 +1,28 @@
+@font-face {
+    font-family: 'NESCyrillic';
+    src: url('./subset-NESCyrillic.eot');
+    src: url('./subset-NESCyrillic.eot?#iefix') format('embedded-opentype'),
+        url('./subset-NESCyrillic.woff2') format('woff2'),
+        url('./subset-NESCyrillic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    image-rendering: pixelated;
+    font-family: 'NESCyrillic','Fixedsys','Terminus', monospace;
+    letter-spacing: 2px;
+    line-height: 1.5;
+    text-transform: uppercase;
+    -webkit-font-smoothing: none;
+    -moz-osx-font-smoothing: grayscale;
+    font-smooth: never;
+}
