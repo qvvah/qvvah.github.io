@@ -6,32 +6,38 @@
     <meta name="description" content="QWAH SOFTWARE PAGE" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/everywhere.css">
+    <link rel="stylesheet" href="css/NESCyrillic.css">
     <style>
-        body, html, table {
+        body, html {
+            height: 100%;
             background-color: #1A1A1A;
             color: #EEEEEE;
-            width: 100%;
-            border: 0;
-            border-collapse: collapse;
-            border-spacing: 0;
-            font-size: 1.3em;
+            font-size: 2.5vw;
+            letter-spacing: 2px;
             margin: 0;
+            padding: 0;
             overflow: hidden;
             text-align: center;
-            text-overflow: clip;
-            vertical-align: middle;
-            white-space: nowrap;
             user-select: none;
             -webkit-user-select: none;
             -moz-user-select: none;
-            -ms-user-select: none;
+            touch-action: none;
+        }
+        table {
+            width: 100%;
+            color: #EEEEEE;
+            border: 0;
+            border-collapse: collapse;
+            border-spacing: 0;
+            table-layout: fixed;
+            vertical-align: middle;
+            white-space: nowrap;
+            text-overflow: clip;
         }
         #content {
             height: 100%;
             width: 800px;
             margin: 0 auto;
-            table-layout: fixed;
         }
         a {
             color: inherit;
@@ -41,13 +47,10 @@
             width: 100%;
         }
         tr {
-            height: 1.5 em;
+            height: 1.5em;
         }
         .sp {
             width: 20%;
-        }
-        .rrw {
-            width: 20px;
         }
         @media screen and (max-width: 800px) {
             #content {
@@ -75,20 +78,16 @@
                 </table>
                 <table id="m">
                     <tr>
-                        <td class="rrw">➔</td>
-                        <td><a href="#"> 1 ?RA??TY</a></td>
+                        <td style="width: 20%">➔</td><td><a href="#"> 1 GRAVITY</a></td>
                     </tr>
                     <tr>
-                        <td class="rrw"></td>
-                        <td><a href="#"> 2 ?Г?A???</a></td>
+                        <td></td><td><a href="#"> 2 ?Г?A???</a></td>
                     </tr>
                     <tr>
-                        <td class="rrw"></td>
-                        <td><a href="#"> 3 R??B</a></td>
+                        <td></td><td><a href="#"> 3 R??B</a></td>
                     </tr>
                     <tr>
-                        <td class="rrw"></td>
-                        <td><a href="#"> 4 N? ??ON?</a></td>
+                        <td></td><td><a href="#"> 4 N? ??ON?</a></td>
                     </tr>
                 </table>
                 <table>
@@ -101,7 +100,48 @@
             <td class="sp"></td>
          </tr>
     </table>
-<script type="text/javascript" src="./js/menu.js"></script>
+<script type="text/javascript">
+    var i=0, r=m.rows;
+    function s(n) { //like old multicart
+        if (n === i) return;
+        Beep();
+        r[i].cells[0].innerText = '';
+        i = n;
+        r[i].cells[0].innerText = '➔';
+    };
+    function go() {
+        var link = r[i].getElementsByTagName('a')[0];
+        if (link) {
+            window.location.href = link.href;
+        }
+    };
+
+    var snd = new Audio('./js/beep.mp3'); //so oldskul!
+    function Beep() {
+        snd.currentTime = 0;
+        snd.play().catch(function(e){});
+    };
+
+    document.onkeydown = function() { //for PC
+        var k = event.keyCode;
+        if (k == 40) s((i + 1) % r.length);
+        if (k == 38) s((i - 1 + r.length) % r.length);
+        if (k == 13) go();
+    };
+    m.onmouseover = function() { //for PC too
+        var row = event.srcElement;
+        while (row && row.tagName != 'tr') row = row.parentNode;
+        if (row && row.rowIndex != null) s(row.rowIndex);
+    };
+
+    var ts; //= touch support // 40 is THRES
+    document.ontouchstart = function(e) { ts = e.touches[0].clientY; };
+    document.ontouchend = function(e) {
+        var te = e.changedTouches[0].clientY;
+        if (Math.abs(ts - te) > 40) s((i + (ts > te ? 1 : -1) + r.length) % r.length);
+    };
+
+</script>
 <script type="text/javascript" src="./js/glitchy.js"></script>
 </body>
 </html>
