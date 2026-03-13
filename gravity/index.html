@@ -73,11 +73,10 @@
             width: 50vw;
         }
         #hud .menu {
-            display: block;
+            display: none;
             background-color: #000;
             border: 5px outset #B8B8B8;
             font-size: 1.5vw;
-            display: none;
             max-height: 50vh;
             width: 50vh;
             max-width: 50vh;
@@ -106,8 +105,8 @@
             display: block;
             width: 100%;
         }
-        #hud #m {
-            display: table !important;
+        #hud #m_snd {
+            display: table;
         }
 
         /* gameplay */
@@ -281,30 +280,27 @@
         <td class="tside">
         <table id="m_snd" class="menu">
             <tr>
-                <th width="10%"></td><td width="70%">ENABLE SOUND?</td><td></td>
+                <th width="10%"></th><td width="70%">ENABLE SOUND?</td><td></td>
             </tr>
             <tr>
-                <td>➔</td><td><a href="javascript:void(0)" onclick="Snd_On()">YES</a></td><td></td>
+                <td>➔</td><td><a href="javascript:sndOn(); goToMenu('m_main');">YES</a></td><td></td>
             </tr>
             <tr>
-                <td></td><td>NO</td><td></td>
+                <td></td><td><a href="javascript:goToMenu('m_main');">NO</a></td><td></td>
             </tr>
         </table>
         <table id="m_main" class="menu">
             <tr>
-                <td width="10%">➔</td><td width="70%">PLAY MENU</td>
+                <td width="10%">➔</td><td width="70%"><a href="javascript:goToMenu('m_play');">PLAY MENU</a></td>
             </tr>
             <tr>
                 <td></td><td>LOAD MRG FILE</td>
             </tr>
             <tr>
-                <td></td><td>OPTIONS</td>
+                <td></td><td><a href="javascript:goToMenu('m_opt');">OPTIONS</a></td>
             </tr>
             <tr>
                 <td></td><td>HELP</td>
-            </tr>
-            <tr>
-                <td></td><td>OPTIONS</td>
             </tr>
             <tr>
                 <td></td><td>ABOUT</td>
@@ -327,7 +323,7 @@
                 <td></td><td>HIGHSCORE</td>
             </tr>
             <tr>
-                <td></td><td>&lt;&lt; MAIN MENU</td>
+                <td></td><td><a href="javascript:goToMenu('m_main');">&lt;&lt; MAIN MENU</a></td>
             </tr>
         </table>
         <table id="m_ingame" class="menu">
@@ -344,7 +340,7 @@
                 <td></td><td>HELP</td><td></td>
             </tr>
             <tr>
-                <td></td><td>&lt;&lt; PLAY MENU</td><td>???</td>
+                <td></td><td><a href="javascript:goToMenu('m_play');">&lt;&lt; PLAY MENU</a></td><td>???</td>
             </tr>
         </table>
         <table id="m_finish" class="menu">
@@ -360,10 +356,8 @@
         </table>
         <table id="m_opt" class="menu">
             <tr>
-                <td width="10%">➔</td><td width="70%">&lt;&lt; MAIN MENU</td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td><td></td>
+                <td width="10%">➔</td><td width="70%"><a href="javascript:goToMenu('m_main');">&lt;&lt; MAIN MENU</a></td><td></td>
+                </br>
             </tr>
             <tr>
                 <td></td><td>CONTROLS</td><td></td>
@@ -373,9 +367,6 @@
             </tr>
             <tr>
                 <td></td><td>SOUND</td><td></td>
-            </tr>
-            <tr>
-                <td></td><td></td><td></td>
             </tr>
             <tr>
                 <td></td><td>USE BG IMAGE</td><td></td>
@@ -438,14 +429,19 @@
     function s(n) { //like old multicart
         if (r[n].cells[0].tagName === 'TH') return;
         if (n === i) return;
-        r[i].cells[0].innerText = '';
+        for (var j = 0; j < r.length; j++) {if(r[j].cells[0]) r[j].cells[0].innerText = ''};
         i = n;
         r[i].cells[0].innerText = '➔';
     };
+
     function go() {
         var link = r[i].getElementsByTagName('a')[0];
         if (link) {
-            window.location.href = link.href;
+            if (link.href.includes('javascript:')) {
+                eval(link.href.replace('javascript:', ''));
+            } else {
+                window.location.href = link.href;
+            }
         }
     };
 
@@ -455,10 +451,23 @@
         if (k == 38) s((i - 1 + r.length) % r.length);
         if (k == 13) go();
     };
-    m.onmouseover = function() { //for PC too
+
+    var mouseOver = function(e) {
         var row = event.srcElement;
-        while (row && row.tagName != 'tr') row = row.parentNode;
+        while (row && row.tagName != 'TR') row = row.parentNode;
         if (row && row.rowIndex != null) s(row.rowIndex);
+    };
+    m.onmouseover = mouseOver;
+
+    function goToMenu(menuname) {
+        m.style.display = "none";
+        m = document.getElementById(menuname);
+        m.style.display = "table";
+        r = m.rows;
+        for (var j = 0; j < r.length; j++) if(r[j].cells[0]) r[j].cells[0].innerText = '';
+        i = (r[0].cells[0].tagName === 'TH') ? 1 : 0;
+        r[i].cells[0].innerText = '➔';
+        m.onmouseover = mouseOver;
     };
 
     var ts; //= touch support // 40 is THRES
@@ -468,7 +477,7 @@
         if (Math.abs(ts - te) > 40) s((i + (ts > te ? 1 : -1) + r.length) % r.length);
     };
 
-    function Snd_On(){
+    function sndOn(){
         const audio = document.getElementById('bgMusic');
         audio.play();
     };

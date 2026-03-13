@@ -128,9 +128,9 @@
         if (k == 38) s((i - 1 + r.length) % r.length);
         if (k == 13) go();
     };
-    m.onmouseover = function() { //for PC too
+    m.onmouseover = function(e) { //for PC too
         var row = event.srcElement;
-        while (row && row.tagName != 'tr') row = row.parentNode;
+        while (row && row.tagName != 'TR') row = row.parentNode;
         if (row && row.rowIndex != null) s(row.rowIndex);
     };
 
@@ -142,6 +142,6 @@
     };
 
 </script>
-<script type="text/javascript" src="./js/glitchy.js"></script>
+<!--<script type="text/javascript" src="./js/glitchy.js"></script>-->
 </body>
 </html>
